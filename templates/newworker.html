@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Flask Intro - login page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Please input name</h1>
+      <br>
+      <form action="" method="post">
+        <input type="text" placeholder="Name" name="name" value="{{
+        request.form.name }}"> <br><br>
+        <input type="text" placeholder="Surname" name="surname" value="{{
+        request.form.surname }}"> <br><br>
+        <input class="btn btn-default" type="submit" value="Login">
+      </form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+         {{ message }}
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    </div>
+  </body>
+</html>
