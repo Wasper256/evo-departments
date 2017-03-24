@@ -1,10 +1,9 @@
-"""Here creating  DB models."""
+"""Here is DB models."""
 from app import db
-import datetime
 
 
 class Department(db.Model):
-    """docstring for ClassName."""
+    """Department model."""
 
     __tablename__ = "department"
 
@@ -19,7 +18,7 @@ class Department(db.Model):
 
 
 class Position(db.Model):
-    """docstring for ClassName."""
+    """Position model."""
 
     __tablename__ = "position"
 
@@ -36,7 +35,7 @@ class Position(db.Model):
 
 
 class Vacancy(db.Model):
-    """docstring for ClassName."""
+    """Vacancy model."""
 
     __tablename__ = "vacancy"
 
@@ -53,7 +52,7 @@ class Vacancy(db.Model):
 
 
 class Worker(db.Model):
-    """docstring for ClassName."""
+    """Workers model."""
 
     __tablename__ = "worker"
 
@@ -65,9 +64,15 @@ class Worker(db.Model):
     bdate = db.Column(db.DateTime, nullable=False)  # birth date
     edate = db.Column(db.DateTime)  # employment date
     idp = db.Column(db.Integer)  # id of position
-    ishead = db.Column(db.Boolean)
+    ishead = db.Column(db.Boolean)  # is this dude head of department?
 
-    def __init__(self, name, description):
+    def __init__(self, name, surname, email, phone, bdate, edate, idp, ishead):
         """initialization."""
         self.name = name
-        self.description = description
+        self.surname = surname
+        self.email = email
+        self.phone = phone
+        self.bdate = bdate
+        self.edate = edate
+        self.idp = idp
+        self.ishead = ishead
