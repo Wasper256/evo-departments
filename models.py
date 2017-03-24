@@ -56,7 +56,7 @@ class Vacancy(db.Model):
 
 
 class Worker(db.Model):
-    """Workers model."""
+    """Worker model."""
 
     __tablename__ = "worker"
 
@@ -68,7 +68,7 @@ class Worker(db.Model):
     bdate = db.Column(db.DateTime, nullable=False)  # birth date
     edate = db.Column(db.DateTime)  # employment date
     idp = db.Column(db.Integer, db.ForeignKey('position.id'))  # id of position
-    ishead = db.Column(db.Boolean)  # is this dude head of department?
+    ishead = db.Column(db.Boolean, default=False)  # is this head of depatment?
 
     def __init__(self, name, surname, email, phone, bdate, edate, idp, ishead):
         """initialization."""

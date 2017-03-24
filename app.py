@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, flash, g
 from flask_sqlalchemy import SQLAlchemy
-import sqlite3
-# import db schema
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
@@ -38,20 +36,22 @@ def workers():
     return render_template('workers.html')
 
 
+@app.route('/profile/<userid>')
+def profile(userid):
+    user = Worker.query.filter_by(id=userid).first()
+    position = Position.query.filter_by(id=user.idp).first()
+    return render_template('profile.html', user=user, position=position)
+
+
 @app.route('/workers/new', methods=['GET', 'POST'])
 def newworker():
-    with sqlite3.connect('sample.db') as g.db:
-        error = None
-        if request.method == 'POST':
-            name = request.form['name']
-            surname = request.form['surname']
-            print(name)
-            print(surname)
-        return render_template('newworker.html', error=error)
-
-
-# def connect_db():
-#     return sqlite3.connect(app.database)
+    error = None
+    if request.method == 'POST':
+        name = request.form['name']
+        surname = request.form['surname']
+        print(name)
+        print(surname)
+    return render_template('newworker.html', error=error)
 
 
 if __name__ == '__main__':
