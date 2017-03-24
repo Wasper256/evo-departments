@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request, flash, g
 from flask_sqlalchemy import SQLAlchemy
 import sqlite3
+# import db schema
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
-app.database = "sample.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///evo.db'
+# create the sqlalchemy object
+db = SQLAlchemy(app)
+
+# import db schema
+from models import *
 
 
 @app.route('/')
@@ -44,8 +50,8 @@ def newworker():
         return render_template('newworker.html', error=error)
 
 
-def connect_db():
-    return sqlite3.connect(app.database)
+# def connect_db():
+#     return sqlite3.connect(app.database)
 
 
 if __name__ == '__main__':

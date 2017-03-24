@@ -41,14 +41,18 @@ class Vacancy(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
-    description = db.Column(db.Text, nullable=False)
     idp = db.Column(db.Integer, nullable=False)  # id of position
+    stdate = db.Column(db.DateTime, nullable=False)  # open date
+    cldate = db.Column(db.DateTime)  # close date
+    oc = db.Column(db.Boolean)  # open or close
 
-    def __init__(self, name, description, idp):
+    def __init__(self, name, idp, stdate, cldate, oc):
         """initialization."""
         self.name = name
-        self.description = description
         self.idp = idp
+        self.stdate = stdate
+        self.cldate = cldate
+        self.oc = oc
 
 
 class Worker(db.Model):
