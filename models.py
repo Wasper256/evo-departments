@@ -25,7 +25,7 @@ class Position(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
-    idd = db.Column(db.Integer, nullable=False)  # id of department
+    idd = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=False)
 
     def __init__(self, name, description, idd):
         """initialization."""
@@ -41,7 +41,7 @@ class Vacancy(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
-    idp = db.Column(db.Integer, nullable=False)  # id of position
+    idp = db.Column(db.Integer, db.ForeignKey('position.id'), nullable=False)
     stdate = db.Column(db.DateTime, nullable=False)  # open date
     cldate = db.Column(db.DateTime)  # close date
     oc = db.Column(db.Boolean)  # open or close
@@ -67,7 +67,7 @@ class Worker(db.Model):
     phone = db.Column(db.String, nullable=False)
     bdate = db.Column(db.DateTime, nullable=False)  # birth date
     edate = db.Column(db.DateTime)  # employment date
-    idp = db.Column(db.Integer)  # id of position
+    idp = db.Column(db.Integer, db.ForeignKey('position.id'))  # id of position
     ishead = db.Column(db.Boolean)  # is this dude head of department?
 
     def __init__(self, name, surname, email, phone, bdate, edate, idp, ishead):
@@ -80,3 +80,20 @@ class Worker(db.Model):
         self.edate = edate
         self.idp = idp
         self.ishead = ishead
+
+
+class WHistory(db.Model):
+    """Workers history model."""
+
+    __tablename__ = "whistory"
+
+    id = db.Column(db.Integer, primary_key=True)
+    idp = db.Column(db.Integer, db.ForeignKey('position.id'))
+    idw = db.Column(db.Integer, db.ForeignKey('worker.id'))
+    edt = db.Column(db.DateTime, nullable=False)  # event date time
+
+    def __init__(self, idp, idw, edt):
+        """initialization."""
+        self.idp = idp
+        self.idw = idw
+        self.edt = edt
