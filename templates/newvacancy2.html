@@ -7,20 +7,18 @@
   </head>
   <body>
     <div class="container">
-      <h1>Please input new vacancy data</h1>
+      <h2>Select position in department</h2>
       <br>
       <form action="" method="post">
-        <input type="text" placeholder="Name" name="name" value="{{
-        request.form.name }}" required> <br><br>
-        <select name="idd" class="selectpicker form-control">
-        {% for d in deps %}
-          <option value="{{ d.id }}">{{ d.name }}</option>
+          <select name="idp" class="selectpicker form-control">
+            {% for p in Position.query.filter_by(idd=idd).all() %}
+            <option value="{{ p.id }}">{{ p.name }}</option>
+            {% endfor %}
+          </select>
           <br><br>
-        {% endfor %}
-        </select>
-        <br><br>
-        <input class="btn btn-default" name="input1" type="submit" value="Add new vacancy">
+        <input class="btn btn-default" name="input2" type="submit" value="Add new vacancy">
       </form>
+
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
