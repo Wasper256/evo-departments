@@ -47,21 +47,55 @@ def profile(userid):
 
 @app.route('/workers/new', methods=['GET', 'POST'])
 def newworker():
-    error = None
     if request.method == 'POST':
         name = request.form['name']
         surname = request.form['surname']
         email = request.form['email']
         phone = request.form['phone']
         bdate = request.form['bdate']
-        print(bdate)
         bdate = datetime.strptime(bdate, "%Y-%m-%d")
-
-        print(surname, name, email, phone, bdate)
         db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
         db.session.commit()
         flash("New worker was added")
-    return render_template('newworker.html', error=error)
+    return render_template('newworker.html')
+
+
+@app.route('/departments/new', methods=['GET', 'POST'])
+def newdepartment():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        db.session.add(Department(name, description))
+        db.session.commit()
+        flash("New Department was added")
+    return render_template('newdepartment.html')
+
+
+@app.route('/positions/new', methods=['GET', 'POST'])
+def newposition():
+    deps = Department.query.all()
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        idd = request.form['idd']
+        db.session.add(Position(name, description, idd))
+        db.session.commit()
+        flash("New Position was added")
+    return render_template('newposition.html', deps=deps)
+
+
+@app.route('/vacancy/new', methods=['GET', 'POST'])
+def newvacancy():
+    deps = Department.query.all()
+    pos = Position.query.all()
+    if request.method == 'POST':
+        name = request.form['name']
+        idd = request.form['idd']
+        idp = request.form['idp']
+        db.session.add(Vacancy(name, idd))
+        db.session.commit()
+        flash("New Vacancy was added")
+    return render_template('newvacancy.html', deps=deps,pos=pos)
 
 
 if __name__ == '__main__':
