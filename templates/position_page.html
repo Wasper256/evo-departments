@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ position.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+</head>
+  <body>
+  <h2>Position name: {{ position.name }} </h2>
+  <h2>Description: {{ position.description }} </h2>
+  <h2>This position owned by department - {{ dep.name }} </h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</body>
+</html>

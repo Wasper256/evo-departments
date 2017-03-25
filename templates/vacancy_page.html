@@ -2,10 +2,12 @@
 <html>
 <head>
   <title>{{ vacancy.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
   <body>
   <h2>Name: {{ vacancy.name }} </h2>
-  <h2>Name: {{ vacancy.name }} </h2>
+  <h2>Description: {{ position.description }} </h2>
   <h2>Creation date: {{ vacancy.stdate }} </h2>
   {% if vacancy.oc %}
     <h2>Vacncy now is active and you can pick employee</h2>
@@ -25,9 +27,6 @@
       <input class="btn btn-default" type="submit" name="reactivate" value="Reactivate vacancy">
     </form>
   {% endif %}
-
-
-
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}

@@ -40,14 +40,15 @@ def workers():
 
 @app.route('/departments/<departmentid>', methods=['GET', 'POST'])
 def department_page(departmentid):
-    department = Vacancy.query.filter_by(id=departmentid).first()
-    return render_template('departments.html')
+    department = Department.query.filter_by(id=departmentid).first()
+    return render_template('department_page.html', department=department)
 
 
 @app.route('/positions/<positionid>', methods=['GET', 'POST'])
 def position_page(positionid):
     position = Position.query.filter_by(id=positionid).first()
-    return render_template('positions.html')
+    dep = Department.query.filter_by(id=position.idd).first()
+    return render_template('position_page.html', position=position, dep=dep)
 
 
 @app.route('/vacancy/<vacancyid>', methods=['GET', 'POST'])
