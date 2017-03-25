@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Flask Intro - login page</title>
@@ -10,10 +11,15 @@
       <br>
       <form action="" method="post">
         <input type="text" placeholder="Name" name="name" value="{{
-        request.form.name }}"> <br><br>
+        request.form.name }}" required> <br><br>
         <input type="text" placeholder="Surname" name="surname" value="{{
-        request.form.surname }}"> <br><br>
-        <input class="btn btn-default" type="submit" value="Login">
+        request.form.surname }}" required> <br><br>
+        <input type="email" placeholder="Email" name="email" value="{{
+        request.form.email }}" required> <br><br>
+        <input type="tel" placeholder="Phone number" pattern="^\d{12}$" name="phone" value="{{ request.form.phone }}" required> <br><br>
+        <input type="date" placeholder="Birth day" name="bdate" value="{{
+        request.form.bdate }}" required> <br><br>
+        <input class="btn btn-default" type="submit" value="Add new worker">
       </form>
       {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
