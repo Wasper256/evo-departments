@@ -40,7 +40,7 @@ class Vacancy(db.Model):
     __tablename__ = "vacancy"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String, nullable=False)
     idp = db.Column(db.Integer, db.ForeignKey('position.id'), nullable=False)
     stdate = db.Column(db.DateTime, nullable=False)  # open date
     cldate = db.Column(db.DateTime)  # close date
@@ -61,7 +61,7 @@ class Worker(db.Model):
     __tablename__ = "worker"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     phone = db.Column(db.String, nullable=False)

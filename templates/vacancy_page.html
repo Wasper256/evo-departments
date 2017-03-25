@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ vacancy.name }}</title>
+</head>
+  <body>
+  <h2>Name: {{ vacancy.name }} </h2>
+  <h2>Name: {{ vacancy.name }} </h2>
+  <h2>Creation date: {{ vacancy.stdate }} </h2>
+  {% if vacancy.oc %}
+    <h2>Vacncy now is active and you can pick employee</h2>
+    <form action="" method="post">
+      <select name="id" class="selectpicker form-control" required>
+      <option value="">None</option>
+      {% for d in workers %}
+        <option value="{{ d.id }}">{{ d.name }} {{ d.surname }}</option>
+      {% endfor %}
+      </select>
+      <input class="btn btn-default" type="submit" name="add" value="Select this worker for vacancy">
+    </form>
+  {% else %}
+    <h2>Vacancy currently is inactive</h2>
+    <h2>Deactivating time: {{ vacancy.cldate }} </h2>
+    <form action="" method="post">
+      <input class="btn btn-default" type="submit" name="reactivate" value="Reactivate vacancy">
+    </form>
+  {% endif %}
+
+
+
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</body>
+</html>

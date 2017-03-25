@@ -28,9 +28,9 @@ def positions():
     return render_template('positions.html')
 
 
-@app.route('/vacansy')
-def vacansy():
-    return render_template('vacansy.html')
+@app.route('/vacancy')
+def vacancy():
+    return render_template('vacancy.html')
 
 
 @app.route('/workers')
@@ -38,22 +38,50 @@ def workers():
     return render_template('workers.html')
 
 
-@app.route('/departments/<departmentid>')
+@app.route('/departments/<departmentid>', methods=['GET', 'POST'])
 def department_page(departmentid):
+    department = Vacancy.query.filter_by(id=departmentid).first()
     return render_template('departments.html')
 
 
-@app.route('/positions/<positionid>')
+@app.route('/positions/<positionid>', methods=['GET', 'POST'])
 def position_page(positionid):
+    position = Position.query.filter_by(id=positionid).first()
     return render_template('positions.html')
 
 
-@app.route('/vacansy/<vacancyid>')
+@app.route('/vacancy/<vacancyid>', methods=['GET', 'POST'])
 def vacansy_page(vacancyid):
-    return render_template('vacansy.html')
+    vacancy = Vacancy.query.filter_by(id=vacancyid).first()
+    workers = Worker.query.filter_by(idp=None).all()
+    position = Position.query.filter_by(id=vacancy.idp).first()
+    if request.method == 'POST' and 'add' in request.form:
+        workerid = request.form['id']
+        print(workerid)
+        # Changing worker data
+        worker = Worker.query.get(workerid)
+        worker.idp = vacancy.idp
+        worker.edate = datetime.utcnow()
+        db.session.commit()
+        # Adding worker history
+        db.session.add(WHistory(vacancy.idp, workerid, datetime.utcnow()))
+        db.session.commit()
+        # Changing vacancy data
+        vc = Vacancy.query.get(vacancyid)
+        vc.cldate = datetime.utcnow()
+        vc.oc = False
+        db.session.commit()
+        flash("Success! Worker profile is updated. Now vacancy is close.")
+    if request.method == 'POST' and 'reactivate' in request.form:
+        vc = Vacancy.query.get(vacancyid)
+        vc.stdate = datetime.utcnow()
+        vc.oc = True
+        db.session.commit()
+        flash("Successful reactivation of vacancy")
+    return render_template('vacancy_page.html', vacancy=vacancy, position=position, workers=workers)
 
 
-@app.route('/workers/<userid>')
+@app.route('/workers/<userid>', methods=['GET', 'POST'])
 def profile(userid):
     user = Worker.query.filter_by(id=userid).first()
     position = Position.query.filter_by(id=user.idp).first()
