@@ -38,7 +38,22 @@ def workers():
     return render_template('workers.html')
 
 
-@app.route('/profile/<userid>')
+@app.route('/departments/<departmentid>')
+def department_page(departmentid):
+    return render_template('departments.html')
+
+
+@app.route('/positions/<positionid>')
+def position_page(positionid):
+    return render_template('positions.html')
+
+
+@app.route('/vacansy/<vacancyid>')
+def vacansy_page(vacancyid):
+    return render_template('vacansy.html')
+
+
+@app.route('/workers/<userid>')
 def profile(userid):
     user = Worker.query.filter_by(id=userid).first()
     position = Position.query.filter_by(id=user.idp).first()
@@ -87,15 +102,19 @@ def newposition():
 @app.route('/vacancy/new', methods=['GET', 'POST'])
 def newvacancy():
     deps = Department.query.all()
-    pos = Position.query.all()
-    if request.method == 'POST':
+    if request.method == 'POST' and 'input1' in request.form:
         name = request.form['name']
         idd = request.form['idd']
+        flash("Please input position in department")
+        return render_template("newvacancy2.html", Position=Position, idd=idd, name=name)
+    if request.method == 'POST' and 'input2' in request.form:
+        name = request.form['isname']
+        idd = request.form['isid']
         idp = request.form['idp']
-        db.session.add(Vacancy(name, idd))
+        db.session.add(Vacancy(name, idp, datetime.utcnow(), None, True))
         db.session.commit()
-        flash("New Vacancy was added")
-    return render_template('newvacancy.html', deps=deps,pos=pos)
+        flash("Vacancy added")
+    return render_template('newvacancy.html', deps=deps)
 
 
 if __name__ == '__main__':
