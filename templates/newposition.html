@@ -15,13 +15,15 @@
         <input type="text" placeholder="Description" size=120 name="description" value="{{
         request.form.description }}" required> <br><br>
         <select name="idd" class="selectpicker form-control">
+        <option value="">None</option>
         {% for d in deps %}
           <option value="{{ d.id }}">{{ d.name }}</option>
         {% endfor %}
         </select>
         <br><br>
         <input class="btn btn-default" type="submit" value="Add new position">
-      </form>
+      </form><br>
+      
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}

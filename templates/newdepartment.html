@@ -15,7 +15,8 @@
         <input type="text" placeholder="Description" size=120 name="description" value="{{
         request.form.description }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Add new department">
-      </form>
+      </form><br>
+      
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}

@@ -190,7 +190,7 @@ def newvacancy():
         return render_template("newvacancy2.html", Position=Position, idd=idd, name=name)
     if request.method == 'POST' and 'input2' in request.form:
         name = request.form['isname']
-        idd = request.form['isid']
+        # idd = request.form['isid']
         idp = request.form['idp']
         db.session.add(Vacancy(name, idp, datetime.utcnow(), None, True))
         db.session.commit()
@@ -243,6 +243,42 @@ def changedepartment(departmentid):
         db.session.commit()
         flash("Department data was changed")
     return render_template('change_department.html', dep=dep)
+
+
+@app.route('/positions/<positionid>/change', methods=['GET', 'POST'])
+def changeposition(positionid):
+    """Page for changing position data."""
+    deps = Department.query.all()
+    pos = Position.query.filter_by(id=positionid).first()
+    if request.method == 'POST':
+        poch = Position.query.get(positionid)
+        poch.name = request.form['name']
+        poch.description = request.form['description']
+        poch.idd = request.form['idd']  # needs improvig(in merge case)
+        db.session.commit()
+        flash("Position data was changed")
+    return render_template('change_position.html', deps=deps, pos=pos)
+
+
+@app.route('/vacancy/<vacancyid>/change', methods=['GET', 'POST'])
+def changevacancy(vacancyid):
+    """Page for changing vacancy data."""
+    deps = Department.query.all()
+    vac = Vacancy.query.filter_by(id=vacancyid).first()
+    if request.method == 'POST' and 'input1' in request.form:
+        name = request.form['name']
+        idd = request.form['idd']
+        flash("Please input position in department")
+        return render_template("change_vacancy2.html", Position=Position, idd=idd, name=name)
+    if request.method == 'POST' and 'input2' in request.form:
+        vach = Vacancy.query.get(vacancyid)
+        vach.name = request.form['isname']
+        # vach.idd = request.form['isid']
+        vach.idp = request.form['idp']
+        db.session.commit()
+        flash("Vacancy data was changed")
+    return render_template('change_vacancy.html', deps=deps, vac=vac)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

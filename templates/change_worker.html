@@ -17,6 +17,7 @@
         <input type="date" name="bdate" value="{{ dt }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Submit changes">
       </form><br>
+      
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}

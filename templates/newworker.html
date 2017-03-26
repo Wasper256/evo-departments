@@ -20,7 +20,8 @@
         <input type="date" placeholder="Birth day" name="bdate" value="{{
         request.form.bdate }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Add new worker">
-      </form>
+      </form><br>
+      
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
