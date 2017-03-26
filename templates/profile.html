@@ -40,6 +40,20 @@
   <form action="" method="post">
     <input class="btn btn-default" type="submit" name="deleteworker" value="Delete this worker">
   </form><br><br>
-
+<h2>Worker history:</h2>
+<table>
+  <tr>
+    <th>Employment date</th>
+    <th>Position</th>
+    <th>Department</th>
+  </tr>
+  {%  for d in wh %}
+    <tr>
+    <th>{{ d.edt }}</th>
+    <th><a href="/positions/{{ d.idp }}">{{ allp.name }}</a></th>
+    <th><a href="/departments/{{ d.id }}">{{ deps.name }}</a></th>
+    </tr>
+  {% endfor %}
+  </table>
 </body>
 </html>

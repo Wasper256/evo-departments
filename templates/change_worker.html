@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>New worker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Changing worker profile</h1>
+      <br>
+      <form action="" method="post">
+        <input type="text" name="name" value="{{ worker.name }}" required> <br><br>
+        <input type="text" name="surname" value="{{ worker.surname }}" required> <br><br>
+        <input type="email" name="email" value="{{ worker.email }}" required> <br><br>
+        <input type="tel" pattern="^\d{12}$" name="phone" value="{{ worker.phone }}" required> <br><br>
+        <input type="date" name="bdate" value="{{ dt }}" required> <br><br>
+        <input class="btn btn-default" type="submit" value="Submit changes">
+      </form><br>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+  </body>
+</html>
