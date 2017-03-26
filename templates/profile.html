@@ -16,7 +16,7 @@
   <h2>In department: <a href="/departments/{{ position.idd }}">{{ department.name }}</a> </h2>
   <h2>Employment date: {{ user.edate }} </h2> 
   <form action="" method="post">
-    <select name="id" class="selectpicker form-control" required>
+    <select name="idd" class="selectpicker form-control" required>
     <h3>Move this worker to department</h3>
     <option value="">None</option>
     {% for d in deps %}

@@ -107,7 +107,6 @@ def profile(userid):
     """Loading specific worker info page."""
     user = Worker.query.filter_by(id=userid).first()
     position = Position.query.filter_by(id=user.idp).first()
-    # positions = Position.query.filter_by(idd=position.idd)
     deps = Department.query.all()
     department = []
     if user.idp:
@@ -119,14 +118,31 @@ def profile(userid):
             profile.ishead = None
             db.session.commit()
         if request.method == 'POST' and 'moveworker' in request.form:
-            pass
+            idd = request.form['idd']
+            # new dwpartment position check
+            odp = Position.query.filter_by(idd=idd, name=position.name).first()
+            if not odp:
+                name = position.name
+                description = position.description
+                db.session.add(Position(name, description, idd))
+                db.session.commit()
+                odp = Position.query.filter_by(name=name, idd=idd).first()
+            profile = Worker.query.get(userid)
+            profile.idp = odp.id
+            profile.edate = datetime.utcnow()
+            profile.ishead = False
+            db.session.add(WHistory(profile.idp, userid, datetime.utcnow()))
+            db.session.commit()
+            return redirect("/workers/{0}".format(userid), code=302)
         if request.method == 'POST' and 'makehead' in request.form:
-            head = Worker.query.filter_by(ishead=True, idp=user.idp).first()
+            positionsd = Position.query.filter_by(idd=department.id).all()
+            for p in positionsd:
+                workers = Worker.query.filter_by(idp=p.id, ishead=True).first()
+                if workers:
+                    headmove = Worker.query.get(workers.id)
+                    headmove.ishead = False
             profile = Worker.query.get(userid)
             profile.ishead = True
-            if head:
-                headmove = Worker.query.get(head.id)
-                headmove.ishead = False
             db.session.commit()
     if request.method == 'POST' and 'deleteworker' in request.form:
         Worker.query.filter_by(id=userid).delete()
