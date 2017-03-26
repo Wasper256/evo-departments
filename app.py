@@ -1,5 +1,5 @@
 """Main app file."""
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -41,7 +41,7 @@ def vacancy():
     return render_template('vacancy.html', vac=vac)
 
 
-@app.route('/workers')
+@app.route('/workers', methods=['GET', 'POST'])
 def workers():
     """Loading workers list."""
     workers = Worker.query.all()
@@ -107,15 +107,32 @@ def profile(userid):
     """Loading specific worker info page."""
     user = Worker.query.filter_by(id=userid).first()
     position = Position.query.filter_by(id=user.idp).first()
+    # positions = Position.query.filter_by(idd=position.idd)
+    deps = Department.query.all()
+    department = []
+    if user.idp:
+        department = Department.query.filter_by(id=position.idd).first()
+        if request.method == 'POST' and 'fireworker' in request.form:
+            profile = Worker.query.get(userid)
+            profile.idp = None
+            profile.edate = None
+            profile.ishead = None
+            db.session.commit()
+        if request.method == 'POST' and 'moveworker' in request.form:
+            pass
+        if request.method == 'POST' and 'makehead' in request.form:
+            head = Worker.query.filter_by(ishead=True, idp=user.idp).first()
+            profile = Worker.query.get(userid)
+            profile.ishead = True
+            if head:
+                headmove = Worker.query.get(head.id)
+                headmove.ishead = False
+            db.session.commit()
     if request.method == 'POST' and 'deleteworker' in request.form:
-        pass
-    if request.method == 'POST' and 'firedworker' in request.form:
-        pass
-    if request.method == 'POST' and 'move worker' in request.form:
-        pass
-    if request.method == 'POST' and 'makehead' in request.form:
-        pass
-    return render_template('profile.html', user=user, position=position)
+        Worker.query.filter_by(id=userid).delete()
+        db.session.commit()
+        return redirect("/workers", code=302)
+    return render_template('profile.html', user=user, position=position, department=department, deps=deps)
 
 
 @app.route('/departments/new', methods=['GET', 'POST'])
