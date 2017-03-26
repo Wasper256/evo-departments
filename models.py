@@ -63,8 +63,8 @@ class Worker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
-    phone = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    phone = db.Column(db.String, unique=True, nullable=False)
     bdate = db.Column(db.DateTime, nullable=False)  # birth date
     edate = db.Column(db.DateTime)  # employment date
     idp = db.Column(db.Integer, db.ForeignKey('position.id'))  # id of position

@@ -2,14 +2,13 @@
 from flask import Flask, render_template, request, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
+from email_validator import validate_email
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///evo.db'
 # create the sqlalchemy object
 db = SQLAlchemy(app)
-
 # import db schema
 from models import *
 
@@ -78,7 +77,6 @@ def vacansy_page(vacancyid):
     position = Position.query.filter_by(id=vacancy.idp).first()
     if request.method == 'POST' and 'add' in request.form:
         workerid = request.form['id']
-        print(workerid)
         # Changing worker data
         worker = Worker.query.get(workerid)
         worker.idp = vacancy.idp
@@ -108,30 +106,18 @@ def profile(userid):
     user = Worker.query.filter_by(id=userid).first()
     position = Position.query.filter_by(id=user.idp).first()
     deps = Department.query.all()
-    allp = Position.query.all()
-    whptable = []
-    whdtable = []
+    whptable, whdtable, dep = ([] for i in range(3))
     i = 0
     wh = WHistory.query.filter_by(idw=userid).all()
     for i in wh:
         temppos = Position.query.filter_by(id=i.idp).first()
         tempdep = Department.query.filter_by(id=temppos.idd).first()
-        print(temppos.name)
-        whdtable.append(tempdep.name)
-        whptable.append(temppos.name)
-        # for m in temppos:
-        #     print m.name
-        #     tempdes = Position.query.filter_by(id=m.id).first()
-        #     print(tempdes.name)
-    print whptable, whdtable
-    department = []
+        whdtable.append(tempdep.name), whptable.append(temppos.name)
     if user.idp:
-        department = Department.query.filter_by(id=position.idd).first()
+        dep = Department.query.filter_by(id=position.idd).first()
         if request.method == 'POST' and 'fireworker' in request.form:
-            profile = Worker.query.get(userid)
-            profile.idp = None
-            profile.edate = None
-            profile.ishead = None
+            prof = Worker.query.get(userid)
+            prof.idp, prof.edate, prof.ishead = (None for i in range(3))
             db.session.commit()
         if request.method == 'POST' and 'moveworker' in request.form:
             idd = request.form['idd']
@@ -151,7 +137,7 @@ def profile(userid):
             db.session.commit()
             return redirect("/workers/{0}".format(userid), code=302)
         if request.method == 'POST' and 'makehead' in request.form:
-            positionsd = Position.query.filter_by(idd=department.id).all()
+            positionsd = Position.query.filter_by(idd=dep.id).all()
             for p in positionsd:
                 workers = Worker.query.filter_by(idp=p.id, ishead=True).first()
                 if workers:
@@ -164,7 +150,7 @@ def profile(userid):
         Worker.query.filter_by(id=userid).delete()
         db.session.commit()
         return redirect("/workers", code=302)
-    return render_template('profile.html', user=user, position=position, department=department, deps=deps, wh=wh, allp=allp, whptable=whptable, whdtable=whdtable, i=i)
+    return render_template('profile.html', user=user, position=position, dep=dep, deps=deps, wh=wh, whptable=whptable, whdtable=whdtable)
 
 
 @app.route('/departments/new', methods=['GET', 'POST'])
@@ -222,9 +208,14 @@ def newworker():
         phone = request.form['phone']
         bdate = request.form['bdate']
         bdate = datetime.strptime(bdate, "%Y-%m-%d")
-        db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
-        db.session.commit()
-        flash("New worker was added")
+        try:
+            val = validate_email(email)  # validate and get info
+            email = val["email"]  # replace with normalized form
+            db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
+            db.session.commit()
+            flash("New worker was added")
+        except:
+            flash("Wrong email format!")
     return render_template('newworker.html')
 
 

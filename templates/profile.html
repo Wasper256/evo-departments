@@ -3,7 +3,7 @@
 <head>
   <title>{{ user.name }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
 <h2>Name: {{ user.name }} </h2>
@@ -13,9 +13,9 @@
 <h2>Birth date: {{ user.bdate }} </h2>
 {% if user.idp %}
   <h2>Curretly on position: <a href="/positions/{{ position.id }}">{{ position.name }}</a></h2>
-  <h2>In department: <a href="/departments/{{ position.idd }}">{{ department.name }}</a> </h2>
+  <h2>In department: <a href="/departments/{{ position.idd }}">{{ dep.name }}</a> </h2>
   <h2>Employment date: {{ user.edate }} </h2> 
-  <form action="" method="post">
+  <form action="" method="post" width="50%">
     <select name="idd" class="selectpicker form-control" required>
     <h3>Move this worker to department</h3>
     <option value="">None</option>
@@ -24,7 +24,7 @@
       <option value="{{ d.id }}">{{d.name}} </option>
     {% endif %}
     {% endfor %}
-    </select>
+    </select><br>
     <input class="btn btn-default" type="submit" name="moveworker" value="Move this worker">
   </form><br>
   <form action="" method="post">
