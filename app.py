@@ -109,7 +109,21 @@ def profile(userid):
     position = Position.query.filter_by(id=user.idp).first()
     deps = Department.query.all()
     allp = Position.query.all()
+    whptable = []
+    whdtable = []
+    i = 0
     wh = WHistory.query.filter_by(idw=userid).all()
+    for i in wh:
+        temppos = Position.query.filter_by(id=i.idp).first()
+        tempdep = Department.query.filter_by(id=temppos.idd).first()
+        print(temppos.name)
+        whdtable.append(tempdep.name)
+        whptable.append(temppos.name)
+        # for m in temppos:
+        #     print m.name
+        #     tempdes = Position.query.filter_by(id=m.id).first()
+        #     print(tempdes.name)
+    print whptable, whdtable
     department = []
     if user.idp:
         department = Department.query.filter_by(id=position.idd).first()
@@ -150,7 +164,7 @@ def profile(userid):
         Worker.query.filter_by(id=userid).delete()
         db.session.commit()
         return redirect("/workers", code=302)
-    return render_template('profile.html', user=user, position=position, department=department, deps=deps, wh=wh, allp=allp)
+    return render_template('profile.html', user=user, position=position, department=department, deps=deps, wh=wh, allp=allp, whptable=whptable, whdtable=whdtable, i=i)
 
 
 @app.route('/departments/new', methods=['GET', 'POST'])
@@ -214,24 +228,6 @@ def newworker():
     return render_template('newworker.html')
 
 
-@app.route('/workers/<workerid>/change', methods=['GET', 'POST'])
-def changeworker(workerid):
-    """Page for changing worker data."""
-    worker = Worker.query.filter_by(id=workerid).first()
-    dt = datetime.date(worker.bdate)
-    if request.method == 'POST':
-        woch = Worker.query.get(workerid)
-        woch.name = request.form['name']
-        woch.surname = request.form['surname']
-        woch.email = request.form['email']
-        woch.phone = request.form['phone']
-        bdate = request.form['bdate']
-        woch.bdate = datetime.strptime(bdate, "%Y-%m-%d")
-        db.session.commit()
-        flash("Worker data was changed")
-    return render_template('change_worker.html', worker=worker, dt=dt)
-
-
 @app.route('/departments/<departmentid>/change', methods=['GET', 'POST'])
 def changedepartment(departmentid):
     """Page for changing department data."""
@@ -278,6 +274,24 @@ def changevacancy(vacancyid):
         db.session.commit()
         flash("Vacancy data was changed")
     return render_template('change_vacancy.html', deps=deps, vac=vac)
+
+
+@app.route('/workers/<workerid>/change', methods=['GET', 'POST'])
+def changeworker(workerid):
+    """Page for changing worker data."""
+    worker = Worker.query.filter_by(id=workerid).first()
+    dt = datetime.date(worker.bdate)
+    if request.method == 'POST':
+        woch = Worker.query.get(workerid)
+        woch.name = request.form['name']
+        woch.surname = request.form['surname']
+        woch.email = request.form['email']
+        woch.phone = request.form['phone']
+        bdate = request.form['bdate']
+        woch.bdate = datetime.strptime(bdate, "%Y-%m-%d")
+        db.session.commit()
+        flash("Worker data was changed")
+    return render_template('change_worker.html', worker=worker, dt=dt)
 
 
 if __name__ == '__main__':

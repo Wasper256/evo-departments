@@ -16,7 +16,7 @@
         request.form.surname }}" required> <br><br>
         <input type="email" placeholder="Email" name="email" value="{{
         request.form.email }}" required> <br><br>
-        <input type="tel" placeholder="Phone number" pattern="^\d{12}$" name="phone" value="{{ request.form.phone }}" required> <br><br>
+        <input type="tel" placeholder="Phone number" pattern="^\+\d{12}$" name="phone" value="{{ request.form.phone }}" required> <br><br>
         <input type="date" placeholder="Birth day" name="bdate" value="{{
         request.form.bdate }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Add new worker">

@@ -50,8 +50,8 @@
   {%  for d in wh %}
     <tr>
     <th>{{ d.edt }}</th>
-    <th><a href="/positions/{{ d.idp }}">{{ allp.name }}</a></th>
-    <th><a href="/departments/{{ d.id }}">{{ deps.name }}</a></th>
+    <th>{{ whptable[loop.index - 1] }}</th>
+    <th>{{ whdtable[loop.index - 1] }}</a></th>
     </tr>
   {% endfor %}
   </table>
