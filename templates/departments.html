@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<title>Departments list</title>
+<body>
+
+<table style="width:100%">
+  <tr>
+    <th>Departments:</th>
+  </tr>
+  {%  for d in deps %}
+    <tr>
+    <th><a href="/departments/{{ d.id }}">{{ d.name }}</a></th>
+    </tr>
+  {% endfor %}
+  </table>
+
+</body>
+</html>

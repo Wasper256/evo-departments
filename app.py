@@ -1,3 +1,4 @@
+"""Main app file."""
 from flask import Flask, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -15,31 +16,41 @@ from models import *
 
 @app.route('/')
 def home():
+    """Loading main page."""
     return render_template('index.html')
 
 
 @app.route('/departments')
 def departments():
-    return render_template('departments.html')
+    """Loading departments list."""
+    deps = Department.query.all()
+    return render_template('departments.html', deps=deps)
 
 
 @app.route('/positions')
 def positions():
-    return render_template('positions.html')
+    """Loading positions list."""
+    pos = Position.query.all()
+    return render_template('positions.html', pos=pos)
 
 
 @app.route('/vacancy')
 def vacancy():
-    return render_template('vacancy.html')
+    """Loading vacancy list."""
+    vac = Vacancy.query.all()
+    return render_template('vacancy.html', vac=vac)
 
 
 @app.route('/workers')
 def workers():
-    return render_template('workers.html')
+    """Loading workers list."""
+    workers = Worker.query.all()
+    return render_template('workers.html', workers=workers)
 
 
 @app.route('/departments/<departmentid>', methods=['GET', 'POST'])
 def department_page(departmentid):
+    """Loading specific department info page."""
     department = Department.query.filter_by(id=departmentid).first()
     positions = Position.query.filter_by(idd=departmentid).all()
     poslist, workers = [], []
@@ -53,6 +64,7 @@ def department_page(departmentid):
 
 @app.route('/positions/<positionid>', methods=['GET', 'POST'])
 def position_page(positionid):
+    """Loading specific position info page."""
     position = Position.query.filter_by(id=positionid).first()
     dep = Department.query.filter_by(id=position.idd).first()
     return render_template('position_page.html', position=position, dep=dep)
@@ -60,6 +72,7 @@ def position_page(positionid):
 
 @app.route('/vacancy/<vacancyid>', methods=['GET', 'POST'])
 def vacansy_page(vacancyid):
+    """Loading specific vacancy info page."""
     vacancy = Vacancy.query.filter_by(id=vacancyid).first()
     workers = Worker.query.filter_by(idp=None).all()
     position = Position.query.filter_by(id=vacancy.idp).first()
@@ -91,28 +104,23 @@ def vacansy_page(vacancyid):
 
 @app.route('/workers/<userid>', methods=['GET', 'POST'])
 def profile(userid):
+    """Loading specific worker info page."""
     user = Worker.query.filter_by(id=userid).first()
     position = Position.query.filter_by(id=user.idp).first()
+    if request.method == 'POST' and 'deleteworker' in request.form:
+        pass
+    if request.method == 'POST' and 'firedworker' in request.form:
+        pass
+    if request.method == 'POST' and 'move worker' in request.form:
+        pass
+    if request.method == 'POST' and 'makehead' in request.form:
+        pass
     return render_template('profile.html', user=user, position=position)
-
-
-@app.route('/workers/new', methods=['GET', 'POST'])
-def newworker():
-    if request.method == 'POST':
-        name = request.form['name']
-        surname = request.form['surname']
-        email = request.form['email']
-        phone = request.form['phone']
-        bdate = request.form['bdate']
-        bdate = datetime.strptime(bdate, "%Y-%m-%d")
-        db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
-        db.session.commit()
-        flash("New worker was added")
-    return render_template('newworker.html')
 
 
 @app.route('/departments/new', methods=['GET', 'POST'])
 def newdepartment():
+    """Loading creating department page."""
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -124,6 +132,7 @@ def newdepartment():
 
 @app.route('/positions/new', methods=['GET', 'POST'])
 def newposition():
+    """Loading creating position page."""
     deps = Department.query.all()
     if request.method == 'POST':
         name = request.form['name']
@@ -137,6 +146,7 @@ def newposition():
 
 @app.route('/vacancy/new', methods=['GET', 'POST'])
 def newvacancy():
+    """Loading creating vacancy page."""
     deps = Department.query.all()
     if request.method == 'POST' and 'input1' in request.form:
         name = request.form['name']
@@ -151,6 +161,22 @@ def newvacancy():
         db.session.commit()
         flash("Vacancy added")
     return render_template('newvacancy.html', deps=deps)
+
+
+@app.route('/workers/new', methods=['GET', 'POST'])
+def newworker():
+    """Loading creating worker page."""
+    if request.method == 'POST':
+        name = request.form['name']
+        surname = request.form['surname']
+        email = request.form['email']
+        phone = request.form['phone']
+        bdate = request.form['bdate']
+        bdate = datetime.strptime(bdate, "%Y-%m-%d")
+        db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
+        db.session.commit()
+        flash("New worker was added")
+    return render_template('newworker.html')
 
 
 if __name__ == '__main__':

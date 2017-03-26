@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<title>Departments list</title>
+<body>
+
+<table>
+  <tr>
+    <th>Employed workers:</th>
+  </tr>
+  {%  for d in workers %}
+  	{%  if d.idp %}
+    <tr>
+    <th><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></th>
+    </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+
+<table>
+  <tr>
+    <th>Unemployed workers:</th>
+  </tr>
+  {%  for d in workers %}
+    {%  if not d.idp %}
+    <tr>
+    <th><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></th>
+    </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<title>Departments list</title>
+<body>
+
+<table style="width:100%">
+  <tr>
+    <th>Opened vacancy:</th>
+  </tr>
+  {%  for d in vac %}
+  	{%  if d.oc %}
+    <tr>
+    <th><a href="/vacancy/{{ d.id }}">{{ d.name }}</a></th>
+    </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+
+<table style="width:100%">
+  <tr>
+    <th>Closed vacancy:</th>
+  </tr>
+  {%  for d in vac %}
+    {%  if not d.oc %}
+    <tr>
+    <th><a href="/vacancy/{{ d.id }}">{{ d.name }}</a></th>
+    </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+
+</body>
+</html>
