@@ -41,7 +41,14 @@ def workers():
 @app.route('/departments/<departmentid>', methods=['GET', 'POST'])
 def department_page(departmentid):
     department = Department.query.filter_by(id=departmentid).first()
-    return render_template('department_page.html', department=department)
+    positions = Position.query.filter_by(idd=departmentid).all()
+    poslist, workers = [], []
+    for f in positions:
+        poslist.append(f.id)
+    for idp in poslist:
+        workers_temp = Worker.query.filter_by(idp=idp).all()
+        workers = workers_temp + workers
+    return render_template('department_page.html', department=department, workers=workers)
 
 
 @app.route('/positions/<positionid>', methods=['GET', 'POST'])
