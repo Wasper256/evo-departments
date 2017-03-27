@@ -262,7 +262,7 @@ def changeworker(workerid):
         woch.email, woch.phone = request.form['email'], request.form['phone']
         woch.bdate = datetime.strptime(request.form['bdate'], "%Y-%m-%d")
         db.session.commit()
-        flash("Worker data was changed")
+        return redirect("/workers/{0}".format(worker.id), code=302)
     return render_template('change_worker.html', worker=worker, dt=dt)
 
 
