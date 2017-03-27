@@ -29,6 +29,7 @@ def vacansy_page(vacancyid):
         vc.cldate, vc.oc = datetime.utcnow(), False
         db.session.commit()  # Changing vacancy data
         flash("Success! Worker profile is updated. Now vacancy is close.")
+    # reactivation feature
     if request.method == 'POST' and 'reactivate' in request.form:
         vc = Vacancy.query.get(vacancyid)
         vc.stdate, vc.oc = datetime.utcnow(), True
@@ -41,14 +42,15 @@ def vacansy_page(vacancyid):
 def newvacancy():
     """Creating vacancy page."""
     deps = Department.query.all()
-    if request.method == 'POST' and 'input1' in request.form:
+    # two stages of creating, because positions depends on departments
+    if request.method == 'POST' and 'input1' in request.form:  # first
         name, idd = request.form['name'], request.form['idd']
-        flash("Please input position in department")
+        flash("Please pick position in department")
         return render_template("newvacancy2.html", Position=Position, idd=idd, name=name)
-    if request.method == 'POST' and 'input2' in request.form:
+    if request.method == 'POST' and 'input2' in request.form:  # second
         name, idp = request.form['isname'], request.form['idp']
         db.session.add(Vacancy(name, idp, datetime.utcnow(), None, True))
-        db.session.commit()
+        db.session.commit()  # commit changes
         flash("Vacancy added")
     return render_template('newvacancy.html', deps=deps)
 
@@ -58,12 +60,13 @@ def changevacancy(vacancyid):
     """Page for changing vacancy data."""
     deps = Department.query.all()
     vac = Vacancy.query.filter_by(id=vacancyid).first()
-    if request.method == 'POST' and 'input1' in request.form:
+    # two stages of changing, because positions depends on departments
+    if request.method == 'POST' and 'input1' in request.form:  # first
         name, idd = request.form['name'], request.form['idd']
-        flash("Please input position in department")
+        flash("Please pick position in department")
         return render_template("change_vacancy2.html", vac=vac, Position=Position, idd=idd, name=name)
-    if request.method == 'POST' and 'input2' in request.form:
+    if request.method == 'POST' and 'input2' in request.form:  # second
         vac.name, vac.idp = request.form['isname'], request.form['idp']
-        db.session.commit()
+        db.session.commit()  # commit vacancy data
         flash("Vacancy data was changed")
     return render_template('change_vacancy.html', deps=deps, vac=vac)
