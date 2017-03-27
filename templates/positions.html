@@ -10,10 +10,12 @@
 <table style="width:100%">
   <tr>
     <th>Positions:</th>
+    <th>Departments:</th>
   </tr>
   {%  for d in pos %}
     <tr>
     <th><a href="/positions/{{ d.id }}">{{ d.name }}</a></th>
+    <th><a href="/departments/{{ deps.query.filter_by(id=d.idd).first().id }}">{{ deps.query.filter_by(id=d.idd).first().name }}</a></th>
     </tr>
   {% endfor %}
   </table>

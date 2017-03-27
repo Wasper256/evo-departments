@@ -1,5 +1,6 @@
+"""File with all Positions backend."""
 from flask import render_template, request, flash, redirect, Blueprint
-positions_blueprint = Blueprint('positions', __name__, template_folder='positions/templates/')
+positions_blueprint = Blueprint('positions', __name__)
 from models import *
 
 
@@ -7,7 +8,7 @@ from models import *
 def positions():
     """Loading positions list."""
     pos = Position.query.all()
-    return render_template('positions.html', pos=pos)
+    return render_template('positions.html', pos=pos, deps=Department)
 
 
 @positions_blueprint.route('/<positionid>', methods=['GET', 'POST'])
@@ -54,7 +55,7 @@ def changeposition(positionid):
                 o.idp = spos.id
                 db.session.commit()  # update idp WHistory
             Position.query.filter_by(id=positionid).delete()  # remove old pos
-        else:
+        else:  # writing data
             poch.name, poch.idd = request.form['name'], request.form['idep']
             poch.description = request.form['description']
         db.session.commit()  # commit changes
