@@ -2,7 +2,6 @@
 from flask import Flask, render_template, request, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from email_validator import validate_email
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
@@ -194,18 +193,14 @@ def newworker():
     if request.method == 'POST':
         name, surname = request.form['name'], request.form['surname']
         phone, bdate = request.form['phone'], request.form['bdate']
+        email = request.form['email']
         bdate = datetime.strptime(bdate, "%Y-%m-%d")
         try:
-            val = validate_email(request.form['email'])
-            email = val["email"]
-            try:
-                db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
-                db.session.commit()
-                flash("New worker was added")
-            except:
-                flash("Error! This email or phone number already registrated!")
+            db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
+            db.session.commit()
+            return redirect("/workers", code=302)
         except:
-            flash("Wrong email format!")
+            flash("Error! This email or phone number already registrated!")
     return render_template('newworker.html')
 
 
@@ -232,28 +227,20 @@ def changeposition(positionid):
         spos = Position.query.filter_by(idd=request.form['idep'], name=request.form['name']).first()
         if spos:  # if exist same position in same department:
             # move all to clone, first one - delete
-            for p in Worker.query.filter_by(idp=spos.id).all():  # idp workers
-                if p.idp is pos.id:
-                    idpch = Worker.query.get(p.id)
-                    idpch.idp = spos.id
-                    db.session.commit()  # update idp workers
-            for m in Vacancy.query.filter_by(idp=spos.id).all():  # idp vacancy
-                if m.idp is pos.id:
-                    idpch = Vacancy.query.get(m.id)
-                    idpch.idp = spos.id
-                    db.session.commit()  # update idp vacancy
-            for o in WHistory.query.filter_by(idp=spos.id).all():  # idp WH
-                print(o.id, o.idp, o.edt)
-                if o.idp is pos.id:
-                    idpch = WHistory.query.get(o.id)
-                    idpch.idp = spos.id
-                    db.session.commit()  # update idp WHistory
+            for p in Worker.query.filter_by(idp=pos.id).all():  # idp workers
+                p.idp = spos.id
+                db.session.commit()  # update idp workers
+            for m in Vacancy.query.filter_by(idp=pos.id).all():  # idp vacancy
+                m.idp = spos.id
+                db.session.commit()  # update idp vacancy
+            for o in WHistory.query.filter_by(idp=pos.id).all():  # idp WH
+                o.idp = spos.id
+                db.session.commit()  # update idp WHistory
             Position.query.filter_by(id=positionid).delete()  # remove old pos
         else:
-            poch = Position.query.get(positionid) # or just move
             poch.name, poch.idd = request.form['name'], request.form['idep']
             poch.description = request.form['description']
-        db.session.commit()
+        db.session.commit()  # commit changes
         return redirect("/positions", code=302)
     return render_template('change_position.html', deps=deps, pos=pos)
 
