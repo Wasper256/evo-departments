@@ -199,9 +199,12 @@ def newworker():
         try:
             val = validate_email(request.form['email'])
             email = val["email"]
-            db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
-            db.session.commit()
-            flash("New worker was added")
+            try:
+                db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
+                db.session.commit()
+                flash("New worker was added")
+            except:
+                flash("Error! This email or phone number already registrated!")
         except:
             flash("Wrong email format!")
     return render_template('newworker.html')
