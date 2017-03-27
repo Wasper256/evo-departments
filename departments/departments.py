@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, Blueprint
 departments_blueprint = Blueprint('departments', __name__)
-from models import Department, Worker, Position
+from models import *
 
 
 @departments_blueprint.route('', methods=['GET', 'POST'])

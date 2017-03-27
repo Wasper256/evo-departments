@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect, Blueprint
 from datetime import datetime
 workers_blueprint = Blueprint('workers', __name__)
-from models import Department, Worker, Position
+from models import *
 
 
 @workers_blueprint.route('/new', methods=['GET', 'POST'])

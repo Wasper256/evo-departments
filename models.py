@@ -1,5 +1,5 @@
 """Here is DB models."""
-from app import db
+from extentions import db
 
 
 class Department(db.Model):

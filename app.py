@@ -1,5 +1,6 @@
 """Main app file."""
 from flask import Flask, render_template
+from extentions import db
 from flask_sqlalchemy import SQLAlchemy
 from departments.departments import departments_blueprint
 from positions.positions import positions_blueprint
@@ -10,9 +11,8 @@ app = Flask(__name__)
 app.secret_key = 'some_secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///evo.db'
 # create the sqlalchemy object
-db = SQLAlchemy(app)
+db.init_app(app)
 # import db schema
-
 app.register_blueprint(departments_blueprint, url_prefix='/departments')
 app.register_blueprint(positions_blueprint, url_prefix='/positions')
 app.register_blueprint(vacancy_blueprint, url_prefix='/vacancy')
