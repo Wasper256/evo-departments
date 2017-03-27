@@ -12,9 +12,21 @@
   <div class="col-sm-12">
   <h2>Name: {{ department.name }} </h2>
   <h2>Description: {{ department.description }} </h2>
+  {% if opvac %}
+  <h2>Opened vacancy are in this department</h2>
+  {% else %}
+  <h2>No opened vacancy in this department</h2>
+  {% endif %}
   <h2>Workers in this department:</h2>
+    {% if not workers %}
+    <h3>Sorry, no workers in this deparment.</h3>
+    {% endif %}
       {% for d in workers %}
-        <h3><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></h3>
+        {% if d.ishead %}
+          <h3><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a><i> - head of department</i></h3>
+        {% else %}
+          <h3><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></h3>
+        {% endif %}
       {% endfor %}
   {% with messages = get_flashed_messages() %}
     {% if messages %}

@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, Blueprint
 from datetime import datetime
-vacancy_blueprint = Blueprint('vacancy', __name__)
+vacancy_blueprint = Blueprint('vacancy', __name__, template_folder='vacancy/templates/')
 from models import *
 
 

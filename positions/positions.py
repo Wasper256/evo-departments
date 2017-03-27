@@ -1,5 +1,5 @@
 from flask import render_template, request, flash, redirect, Blueprint
-positions_blueprint = Blueprint('positions', __name__)
+positions_blueprint = Blueprint('positions', __name__, template_folder='positions/templates/')
 from models import *
 
 

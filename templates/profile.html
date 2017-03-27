@@ -17,7 +17,11 @@
   <h2>Birth date: {{ user.bdate }} </h2>
   {% if user.idp %}
     <h2>Curretly on position: <a href="/positions/{{ position.id }}">{{ position.name }}</a></h2>
-    <h2>In department: <a href="/departments/{{ position.idd }}">{{ dep.name }}</a> </h2>
+    <h2>In department: <a href="/departments/{{ position.idd }}">{{ dep.name }}</a>
+    {% if user.ishead %}
+      (Head)
+    {% endif %}
+    </h2>
     <h2>Employment date: {{ user.edate }} </h2> 
     <form action="" method="post" width="50%">
       <select name="idd" class="selectpicker form-control" required>
