@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
-  <body>
+<body>
+  <div class="col-sm-4"><h3 class="text-center"><a href="/">Main page</a></h3></div>
+  <div class="col-sm-4"><h3 class="text-center"><a href="/departments">Back to departments</a></h3></div>
+  <div class="col-sm-4"><h3 class="text-center"><a href="/departments/{{ department.id }}/change">Change department</a></h3></div>
+  <div class="col-sm-12">
   <h2>Name: {{ department.name }} </h2>
   <h2>Description: {{ department.description }} </h2>
   <h2>Workers in this department:</h2>
       {% for d in workers %}
-        <h3><a href="/workers/{{ d.id }}">{{ d.name}}</a></h3>
+        <h3><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></h3>
       {% endfor %}
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -19,5 +23,6 @@
       {% endfor %}
     {% endif %}
   {% endwith %}
+  </div>
 </body>
 </html>

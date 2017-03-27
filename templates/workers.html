@@ -4,32 +4,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
 <body>
-
-<table>
-  <tr>
-    <th>Employed workers:</th>
-  </tr>
-  {%  for d in workers %}
-  	{%  if d.idp %}
+<div class="col-sm-6"><h3 class="text-center"><a href="/">Main page</a></h3></div>
+<div class="col-sm-6"><h3 class="text-center"><a href="/workers/new">Create new worker</a></h3></div>
+<div class="col-sm-6">
+    <table>
+      <tr>
+        <th>Employed workers:</th>
+      </tr>
+      {%  for d in workers %}
+      	{%  if d.idp %}
+      <tr>
+        <th><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></th>
+      </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+  <div class="col-sm-6">
+  <table>
     <tr>
-    <th><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></th>
+      <th>Unemployed workers:</th>
     </tr>
-    {% endif %}
-  {% endfor %}
-  </table>
-
-<table>
-  <tr>
-    <th>Unemployed workers:</th>
-  </tr>
-  {%  for d in workers %}
-    {%  if not d.idp %}
-    <tr>
-    <th><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></th>
-    </tr>
-    {% endif %}
-  {% endfor %}
-  </table>
-
+    {%  for d in workers %}
+      {%  if not d.idp %}
+      <tr>
+      <th><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></th>
+      </tr>
+      {% endif %}
+    {% endfor %}
+    </table>
+  </div>
 </body>
 </html>

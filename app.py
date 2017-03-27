@@ -19,21 +19,21 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/departments')
+@app.route('/departments', methods=['GET', 'POST'])
 def departments():
     """Loading departments list."""
     deps = Department.query.all()
     return render_template('departments.html', deps=deps)
 
 
-@app.route('/positions')
+@app.route('/positions', methods=['GET', 'POST'])
 def positions():
     """Loading positions list."""
     pos = Position.query.all()
     return render_template('positions.html', pos=pos)
 
 
-@app.route('/vacancy')
+@app.route('/vacancy', methods=['GET', 'POST'])
 def vacancy():
     """Loading vacancy list."""
     vac = Vacancy.query.all()
@@ -72,18 +72,18 @@ def position_page(positionid):
 @app.route('/vacancy/<vacancyid>', methods=['GET', 'POST'])
 def vacansy_page(vacancyid):
     """Loading specific vacancy info page."""
-    vacancy = Vacancy.query.filter_by(id=vacancyid).first()
-    workers = Worker.query.filter_by(idp=None).all()
-    position = Position.query.filter_by(id=vacancy.idp).first()
+    vac = Vacancy.query.filter_by(id=vacancyid).first()
+    work = Worker.query.filter_by(idp=None).all()
+    pos = Position.query.filter_by(id=vac.idp).first()
     if request.method == 'POST' and 'add' in request.form:
         workerid = request.form['id']
         # Changing worker data
         worker = Worker.query.get(workerid)
-        worker.idp = vacancy.idp
+        worker.idp = vac.idp
         worker.edate = datetime.utcnow()
         db.session.commit()
         # Adding worker history
-        db.session.add(WHistory(vacancy.idp, workerid, datetime.utcnow()))
+        db.session.add(WHistory(vac.idp, workerid, datetime.utcnow()))
         db.session.commit()
         # Changing vacancy data
         vc = Vacancy.query.get(vacancyid)
@@ -97,7 +97,7 @@ def vacansy_page(vacancyid):
         vc.oc = True
         db.session.commit()
         flash("Successful reactivation of vacancy")
-    return render_template('vacancy_page.html', vacancy=vacancy, position=position, workers=workers)
+    return render_template('vacancy_page.html', vac=vac, pos=pos, work=work)
 
 
 @app.route('/workers/<userid>', methods=['GET', 'POST'])
@@ -107,7 +107,6 @@ def profile(userid):
     position = Position.query.filter_by(id=user.idp).first()
     deps = Department.query.all()
     whptable, whdtable, dep = ([] for i in range(3))
-    i = 0
     wh = WHistory.query.filter_by(idw=userid).all()
     for i in wh:
         temppos = Position.query.filter_by(id=i.idp).first()
@@ -117,21 +116,19 @@ def profile(userid):
         dep = Department.query.filter_by(id=position.idd).first()
         if request.method == 'POST' and 'fireworker' in request.form:
             prof = Worker.query.get(userid)
-            prof.idp, prof.edate, prof.ishead = (None for i in range(3))
+            prof.idp, prof.edate, prof.ishead = (None for x in range(3))
             db.session.commit()
         if request.method == 'POST' and 'moveworker' in request.form:
             idd = request.form['idd']
             # new dwpartment position check
             odp = Position.query.filter_by(idd=idd, name=position.name).first()
             if not odp:
-                name = position.name
-                description = position.description
+                name, description = position.name, position.description
                 db.session.add(Position(name, description, idd))
                 db.session.commit()
                 odp = Position.query.filter_by(name=name, idd=idd).first()
             profile = Worker.query.get(userid)
-            profile.idp = odp.id
-            profile.edate = datetime.utcnow()
+            profile.idp, profile.edate = odp.id, datetime.utcnow()
             profile.ishead = False
             db.session.add(WHistory(profile.idp, userid, datetime.utcnow()))
             db.session.commit()
@@ -141,8 +138,7 @@ def profile(userid):
             for p in positionsd:
                 workers = Worker.query.filter_by(idp=p.id, ishead=True).first()
                 if workers:
-                    headmove = Worker.query.get(workers.id)
-                    headmove.ishead = False
+                    headmove, headmove.ishead = Worker.query.get(workers.id), False
             profile = Worker.query.get(userid)
             profile.ishead = True
             db.session.commit()
@@ -155,10 +151,9 @@ def profile(userid):
 
 @app.route('/departments/new', methods=['GET', 'POST'])
 def newdepartment():
-    """Loading creating department page."""
+    """Creating department page."""
     if request.method == 'POST':
-        name = request.form['name']
-        description = request.form['description']
+        name, description = request.form['name'], request.form['description']
         db.session.add(Department(name, description))
         db.session.commit()
         flash("New Department was added")
@@ -167,12 +162,11 @@ def newdepartment():
 
 @app.route('/positions/new', methods=['GET', 'POST'])
 def newposition():
-    """Loading creating position page."""
+    """Creating position page."""
     deps = Department.query.all()
     if request.method == 'POST':
-        name = request.form['name']
+        name, idd = request.form['name'], request.form['idd']
         description = request.form['description']
-        idd = request.form['idd']
         db.session.add(Position(name, description, idd))
         db.session.commit()
         flash("New Position was added")
@@ -181,17 +175,14 @@ def newposition():
 
 @app.route('/vacancy/new', methods=['GET', 'POST'])
 def newvacancy():
-    """Loading creating vacancy page."""
+    """Creating vacancy page."""
     deps = Department.query.all()
     if request.method == 'POST' and 'input1' in request.form:
-        name = request.form['name']
-        idd = request.form['idd']
+        name, idd = request.form['name'], request.form['idd']
         flash("Please input position in department")
         return render_template("newvacancy2.html", Position=Position, idd=idd, name=name)
     if request.method == 'POST' and 'input2' in request.form:
-        name = request.form['isname']
-        # idd = request.form['isid']
-        idp = request.form['idp']
+        name, idp = request.form['isname'], request.form['idp']
         db.session.add(Vacancy(name, idp, datetime.utcnow(), None, True))
         db.session.commit()
         flash("Vacancy added")
@@ -202,15 +193,12 @@ def newvacancy():
 def newworker():
     """Loading creating worker page."""
     if request.method == 'POST':
-        name = request.form['name']
-        surname = request.form['surname']
-        email = request.form['email']
-        phone = request.form['phone']
-        bdate = request.form['bdate']
+        name, surname = request.form['name'], request.form['surname']
+        phone, bdate = request.form['phone'], request.form['bdate']
         bdate = datetime.strptime(bdate, "%Y-%m-%d")
         try:
-            val = validate_email(email)  # validate and get info
-            email = val["email"]  # replace with normalized form
+            val = validate_email(request.form['email'])
+            email = val["email"]
             db.session.add(Worker(name, surname, email, phone, bdate, None, None, False))
             db.session.commit()
             flash("New worker was added")
@@ -239,9 +227,8 @@ def changeposition(positionid):
     pos = Position.query.filter_by(id=positionid).first()
     if request.method == 'POST':
         poch = Position.query.get(positionid)
-        poch.name = request.form['name']
+        poch.name, poch.idd = request.form['name'], request.form['idd']
         poch.description = request.form['description']
-        poch.idd = request.form['idd']  # needs improvig(in merge case)
         db.session.commit()
         flash("Position data was changed")
     return render_template('change_position.html', deps=deps, pos=pos)
@@ -253,15 +240,12 @@ def changevacancy(vacancyid):
     deps = Department.query.all()
     vac = Vacancy.query.filter_by(id=vacancyid).first()
     if request.method == 'POST' and 'input1' in request.form:
-        name = request.form['name']
-        idd = request.form['idd']
+        name, idd = request.form['name'], request.form['idd']
         flash("Please input position in department")
-        return render_template("change_vacancy2.html", Position=Position, idd=idd, name=name)
+        return render_template("change_vacancy2.html", vac=vac, Position=Position, idd=idd, name=name)
     if request.method == 'POST' and 'input2' in request.form:
         vach = Vacancy.query.get(vacancyid)
-        vach.name = request.form['isname']
-        # vach.idd = request.form['isid']
-        vach.idp = request.form['idp']
+        vach.name, vach.idp = request.form['isname'], request.form['idp']
         db.session.commit()
         flash("Vacancy data was changed")
     return render_template('change_vacancy.html', deps=deps, vac=vac)
@@ -274,12 +258,9 @@ def changeworker(workerid):
     dt = datetime.date(worker.bdate)
     if request.method == 'POST':
         woch = Worker.query.get(workerid)
-        woch.name = request.form['name']
-        woch.surname = request.form['surname']
-        woch.email = request.form['email']
-        woch.phone = request.form['phone']
-        bdate = request.form['bdate']
-        woch.bdate = datetime.strptime(bdate, "%Y-%m-%d")
+        woch.name, woch.surname = request.form['name'], request.form['surname']
+        woch.email, woch.phone = request.form['email'], request.form['phone']
+        woch.bdate = datetime.strptime(request.form['bdate'], "%Y-%m-%d")
         db.session.commit()
         flash("Worker data was changed")
     return render_template('change_worker.html', worker=worker, dt=dt)

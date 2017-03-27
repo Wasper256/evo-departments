@@ -6,22 +6,22 @@
     <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class="container">
-      <h2>Select position in department</h2>
-      <br>
+    <div class="col-sm-4"><h3 class="text-center"><a href="/">Main page</a></h3></div>
+    <div class="col-sm-4"><h3 class="text-center"><a href="/vacancy">Back to vacancies page</a></h3></div>
+    <div class="col-sm-4"><h3 class="text-center"><a href="/vacancy/{{ vac.id }}">Back to vacancy page</a></h3></div>
+    <div class="col-sm-12">
+      <h2 class="text-center">Select position in department</h2><br>
       <form action="" method="post">
         <input type="hidden" name="isname" value="{{ name }}">
         <input type="hidden" name="isid" value="{{ idd }}">
-          <select name="idp" class="selectpicker form-control" required>
+        <select name="idp" class="selectpicker form-control" required>
           <option value="">None</option>
-            {% for p in Position.query.filter_by(idd=idd).all() %}
+          {% for p in Position.query.filter_by(idd=idd).all() %}
             <option value="{{ p.id }}">{{ p.name }}</option>
-            {% endfor %}
-          </select>
-          <br><br>
+          {% endfor %}
+        </select><br><br>
         <input class="btn btn-default" name="input2" type="submit" value="Submit data">
       </form><br>
-
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}

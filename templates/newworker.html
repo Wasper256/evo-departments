@@ -6,6 +6,8 @@
     <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
+    <div class="col-sm-6"><h3 class="text-center"><a href="/">Main page</a></h3></div>
+    <div class="col-sm-6"><h3 class="text-center"><a href="/workers">Back to workers</a></h3></div>
     <div class="container">
       <h1>Please input name</h1>
       <br>
@@ -20,8 +22,7 @@
         <input type="date" placeholder="Birth day" name="bdate" value="{{
         request.form.bdate }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Add new worker">
-      </form><br>
-      
+      </form><br>      
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}

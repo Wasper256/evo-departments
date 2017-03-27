@@ -4,7 +4,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
 <body>
-
+<div class="col-sm-6"><h3 class="text-center"><a href="/">Main page</a></h3></div>
+<div class="col-sm-6"><h3 class="text-center"><a href="/vacancy/new">Create new vacancy</a></h3></div>
+<div class="col-sm-6">
 <table style="width:100%">
   <tr>
     <th>Opened vacancy:</th>
@@ -16,8 +18,9 @@
     </tr>
     {% endif %}
   {% endfor %}
-  </table>
-
+</table>
+</div>
+<div class="col-sm-6">
 <table style="width:100%">
   <tr>
     <th>Closed vacancy:</th>
@@ -30,6 +33,6 @@
     {% endif %}
   {% endfor %}
   </table>
-
+</div>
 </body>
 </html>
