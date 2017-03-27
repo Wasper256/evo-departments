@@ -54,10 +54,10 @@ def department_page(departmentid):
     positions = Position.query.filter_by(idd=departmentid).all()
     poslist, workers = [], []
     for f in positions:
-        poslist.append(f.id)
+        poslist.append(f.id)  # creating list of id positions
     for idp in poslist:
         workers_temp = Worker.query.filter_by(idp=idp).all()
-        workers = workers_temp + workers
+        workers = workers_temp + workers  # getting workers profile list
     return render_template('department_page.html', department=department, workers=workers)
 
 
@@ -77,24 +77,19 @@ def vacansy_page(vacancyid):
     pos = Position.query.filter_by(id=vac.idp).first()
     if request.method == 'POST' and 'add' in request.form:
         workerid = request.form['id']
-        # Changing worker data
         worker = Worker.query.get(workerid)
         worker.idp = vac.idp
         worker.edate = datetime.utcnow()
-        db.session.commit()
-        # Adding worker history
+        db.session.commit()  # Changing worker data
         db.session.add(WHistory(vac.idp, workerid, datetime.utcnow()))
-        db.session.commit()
-        # Changing vacancy data
+        db.session.commit()  # Adding worker history
         vc = Vacancy.query.get(vacancyid)
-        vc.cldate = datetime.utcnow()
-        vc.oc = False
-        db.session.commit()
+        vc.cldate, vc.oc = datetime.utcnow(), False
+        db.session.commit()  # Changing vacancy data
         flash("Success! Worker profile is updated. Now vacancy is close.")
     if request.method == 'POST' and 'reactivate' in request.form:
         vc = Vacancy.query.get(vacancyid)
-        vc.stdate = datetime.utcnow()
-        vc.oc = True
+        vc.stdate, vc.oc = datetime.utcnow(), True
         db.session.commit()
         flash("Successful reactivation of vacancy")
     return render_template('vacancy_page.html', vac=vac, pos=pos, work=work)
@@ -166,10 +161,14 @@ def newposition():
     deps = Department.query.all()
     if request.method == 'POST':
         name, idd = request.form['name'], request.form['idd']
-        description = request.form['description']
-        db.session.add(Position(name, description, idd))
-        db.session.commit()
-        flash("New Position was added")
+        # some anticlone logic
+        if not Position.query.filter_by(name=name, idd=idd).first():
+            description = request.form['description']
+            db.session.add(Position(name, description, idd))
+            db.session.commit()
+            flash("New Position was added")
+        else:
+            flash("Error! This position already exist!")
     return render_template('newposition.html', deps=deps)
 
 
@@ -226,14 +225,36 @@ def changedepartment(departmentid):
 @app.route('/positions/<positionid>/change', methods=['GET', 'POST'])
 def changeposition(positionid):
     """Page for changing position data."""
-    deps = Department.query.all()
     pos = Position.query.filter_by(id=positionid).first()
+    deps = Department.query.all()
     if request.method == 'POST':
-        poch = Position.query.get(positionid)
-        poch.name, poch.idd = request.form['name'], request.form['idd']
-        poch.description = request.form['description']
+        poch = Position.query.filter_by(id=positionid).first()
+        spos = Position.query.filter_by(idd=request.form['idep'], name=request.form['name']).first()
+        if spos:  # if exist same position in same department:
+            # move all to clone, first one - delete
+            for p in Worker.query.filter_by(idp=spos.id).all():  # idp workers
+                if p.idp is pos.id:
+                    idpch = Worker.query.get(p.id)
+                    idpch.idp = spos.id
+                    db.session.commit()  # update idp workers
+            for m in Vacancy.query.filter_by(idp=spos.id).all():  # idp vacancy
+                if m.idp is pos.id:
+                    idpch = Vacancy.query.get(m.id)
+                    idpch.idp = spos.id
+                    db.session.commit()  # update idp vacancy
+            for o in WHistory.query.filter_by(idp=spos.id).all():  # idp WH
+                print(o.id, o.idp, o.edt)
+                if o.idp is pos.id:
+                    idpch = WHistory.query.get(o.id)
+                    idpch.idp = spos.id
+                    db.session.commit()  # update idp WHistory
+            Position.query.filter_by(id=positionid).delete()  # remove old pos
+        else:
+            poch = Position.query.get(positionid) # or just move
+            poch.name, poch.idd = request.form['name'], request.form['idep']
+            poch.description = request.form['description']
         db.session.commit()
-        flash("Position data was changed")
+        return redirect("/positions", code=302)
     return render_template('change_position.html', deps=deps, pos=pos)
 
 

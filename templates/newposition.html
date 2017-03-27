@@ -16,7 +16,7 @@
         request.form.name }}" required> <br><br>
         <input type="text" placeholder="Description" size=120 name="description" value="{{
         request.form.description }}" required> <br><br>
-        <select name="idd" class="selectpicker form-control">
+        <select name="idd" class="selectpicker form-control" required>
         <option value="">None</option>
         {% for d in deps %}
           <option value="{{ d.id }}">{{ d.name }}</option>
