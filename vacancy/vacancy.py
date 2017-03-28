@@ -1,6 +1,8 @@
+
+"""File with all Vacancy backend."""
 from flask import render_template, request, flash, Blueprint
 from datetime import datetime
-vacancy_blueprint = Blueprint('vacancy', __name__, template_folder='vacancy/templates/')
+vacancy_blueprint = Blueprint('vacancy', __name__)
 from models import *
 
 
