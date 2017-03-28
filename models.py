@@ -1,4 +1,4 @@
-"""Here is DB models."""
+"""Here is containing DB models."""
 from extentions import db
 
 
