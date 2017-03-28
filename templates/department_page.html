@@ -28,6 +28,7 @@
           <h3><a href="/workers/{{ d.id }}">{{ d.name }} {{ d.surname }}</a></h3>
         {% endif %}
       {% endfor %}
+      
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}

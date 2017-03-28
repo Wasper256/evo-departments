@@ -14,13 +14,14 @@
       <form action="" method="post">
         <input type="hidden" name="isname" value="{{ name }}">
         <input type="hidden" name="isid" value="{{ idd }}">
+        <h4>Select position:</h4>
           <select name="idp" class="selectpicker form-control" required>
           <option value="">None</option>
             {% for p in Position.query.filter_by(idd=idd).all() %}
             <option value="{{ p.id }}">{{ p.name }}</option>
             {% endfor %}
           </select>
-          <br><br>
+          <br>
         <input class="btn btn-default" name="input2" type="submit" value="Add new vacancy">
       </form><br>
 

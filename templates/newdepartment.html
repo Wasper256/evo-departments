@@ -12,8 +12,10 @@
       <h1>Please input new department data</h1>
       <br>
       <form action="" method="post">
+        <h4>Department name:</h4>
         <input type="text" placeholder="Name" name="name" value="{{
         request.form.name }}" required> <br><br>
+        <h4>Description:</h4>
         <input type="text" placeholder="Description" size=120 name="descr" value="{{
         request.form.description }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Add new department">

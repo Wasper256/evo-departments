@@ -12,13 +12,18 @@
       <h1>Please input name</h1>
       <br>
       <form action="" method="post">
+        <h4>Name:</h4>
         <input type="text" placeholder="Name" name="name" value="{{
         request.form.name }}" required> <br><br>
+        <h4>Surame:</h4>
         <input type="text" placeholder="Surname" name="surname" value="{{
         request.form.surname }}" required> <br><br>
+        <h4>Email:</h4>
         <input type="email" placeholder="Email" name="email" value="{{
         request.form.email }}" required> <br><br>
+        <h4>Phone number(+xxxxxxxxxxxx):</h4>
         <input type="tel" placeholder="Phone number" pattern="^\+\d{12}$" name="phone" value="{{ request.form.phone }}" required> <br><br>
+        <h4>Select date:</h4>
         <input type="date" placeholder="Birth day" name="bdate" value="{{
         request.form.bdate }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Add new worker">

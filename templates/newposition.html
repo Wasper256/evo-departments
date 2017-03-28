@@ -12,10 +12,13 @@
       <h1>Please input new position data</h1>
       <br>
       <form action="" method="post">
+        <h4>Position name:</h4>
         <input type="text" placeholder="Name" name="name" value="{{
         request.form.name }}" required> <br><br>
+        <h4>Position description:</h4>
         <input type="text" placeholder="Description" size=120 name="description" value="{{
         request.form.description }}" required> <br><br>
+        <h4>Select department:</h4>
         <select name="idd" class="selectpicker form-control" required>
         <option value="">None</option>
         {% for d in deps %}

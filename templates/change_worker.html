@@ -12,10 +12,15 @@
       <h1 class="text-center">Here you can change worker profile</h1>
       <br>
       <form action="" method="post">
+        <h4>Name:</h4>
         <input type="text" name="name" value="{{ worker.name }}" required> <br><br>
+        <h4>Surame:</h4>
         <input type="text" name="surname" value="{{ worker.surname }}" required> <br><br>
+        <h4>Email:</h4>
         <input type="email" name="email" value="{{ worker.email }}" required> <br><br>
+        <h4>Phone number(+xxxxxxxxxxxx):</h4>
         <input type="tel" pattern="^\+\d{12}$" name="phone" value="{{ worker.phone }}" required> <br><br>
+        <h4>Select date:</h4>
         <input type="date" name="bdate" value="{{ dt }}" required> <br><br>
         <input class="btn btn-default" type="submit" value="Submit changes">
       </form><br>

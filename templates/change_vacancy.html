@@ -13,7 +13,9 @@
     <div class="container">
       <br>
       <form action="" method="post">
+        <h4>Vacancy name:</h4>
         <input type="text" name="name" value=" {{ vac.name  }} " required> <br><br>
+        <h4>Select department:</h4>
         <select name="idd" class="selectpicker form-control" required>
         <option value="">None</option>
         {% for d in deps %}
@@ -21,7 +23,7 @@
           <br><br>
         {% endfor %}
         </select>
-        <br><br>
+        <br>
         <input class="btn btn-default" name="input1" type="submit" value="Submit changes">
       </form><br>
 
