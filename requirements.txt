@@ -5,6 +5,7 @@ email-validator==1.0.1
 Flask==0.12
 Flask-SQLAlchemy==2.2
 Flask-Validator==1.2.1
+gunicorn==19.7.1
 idna==2.5
 isbnlib==3.5.8
 iso3166==0.7
