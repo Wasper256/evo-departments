@@ -1,7 +1,7 @@
 """File with all Positions backend."""
 from flask import render_template, request, flash, redirect, Blueprint
 positions_blueprint = Blueprint('positions', __name__)
-from models import *
+from models import *  # fix dat thing to normal
 
 
 @positions_blueprint.route('', methods=['GET', 'POST'])
